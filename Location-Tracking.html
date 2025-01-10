@@ -1,0 +1,15 @@
+Location-Tracking.html
+<div id="map" style="height: 400px;"></div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    const map = L.map('map').setView([51.505, -0.09], 13); // Default location
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    fetch('/api/location-stream')
+        .then(response => response.json())
+        .then(locations => {
+            locations.forEach(location => {
+                L.marker([location.latitude, location.longitude]).addTo(map);
+            });
+        });
+</script>

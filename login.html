@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unified Portal - Rapide ELC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #2f2f2f;
+      color: #f1c40f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      background-color: #333;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .logo-container {
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      width: 200px;
+      height: auto;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #f1c40f;
+      margin-top: 15px;
+    }
+
+    h3 {
+      color: #f1c40f;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"], input[type="password"], input[type="email"] {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      background-color: #444;
+      border: 1px solid #555;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
+      outline: none;
+      border-color: #f1c40f;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background-color: #f1c40f;
+      color: black;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 18px;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background-color: #e67e22;
+    }
+
+    .toggle-button {
+      background-color: transparent;
+      color: #f1c40f;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+      font-size: 1rem;
+    }
+
+    .auth-links {
+      margin-top: 20px;
+    }
+
+    .auth-links a {
+      color: #f1c40f;
+      text-decoration: none;
+      font-size: 1rem;
+      margin: 0 10px;
+    }
+
+    .auth-links a:hover {
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <img src="img/logo.png" alt="Rapide Electric Logo" class="logo">
+      <h1>Rapide Electric Inc.</h1>
+    </div>
+    <h3 id="formTitle">Log In</h3>
+    <form id="authForm">
+      <input type="text" id="username" placeholder="Username" required><br>
+      <input type="password" id="password" placeholder="Password" required><br>
+      <button type="submit">Login</button>
+    </form>
+    <button class="toggle-button" onclick="toggleForm()">Switch to Sign Up</button>
+    <div class="auth-links">
+      <a href="#" onclick="toggleForgotPassword()">Forgot Password</a>
+    </div>
+  </div>
+
+  <script>
+    let isLogin = true;
+
+    function toggleForm() {
+      const formTitle = document.getElementById('formTitle');
+      const authForm = document.getElementById('authForm');
+      const toggleButton = document.querySelector('.toggle-button');
+
+      if (isLogin) {
+        formTitle.innerText = 'Sign Up';
+        authForm.innerHTML = `
+          <input type="text" id="username" placeholder="Username" required><br>
+          <input type="email" id="email" placeholder="Email" required><br>
+          <input type="password" id="password" placeholder="Password" required><br>
+          <button type="submit">Sign Up</button>
+        `;
+        toggleButton.innerText = 'Switch to Log In';
+      } else {
+        formTitle.innerText = 'Log In';
+        authForm.innerHTML = `
+          <input type="text" id="username" placeholder="Username" required><br>
+          <input type="password" id="password" placeholder="Password" required><br>
+          <button type="submit">Login</button>
+        `;
+        toggleButton.innerText = 'Switch to Sign Up';
+      }
+
+      isLogin = !isLogin;
+    }
+
+    function toggleForgotPassword() {
+      const formTitle = document.getElementById('formTitle');
+      const authForm = document.getElementById('authForm');
+
+      formTitle.innerText = 'Reset Password';
+      authForm.innerHTML = `
+        <input type="email" id="email" placeholder="Email" required><br>
+        <button type="submit">Reset Password</button>
+      `;
+
+      document.querySelector('.toggle-button').innerText = 'Back to Log In';
+      isLogin = false;
+    }
+
+    document.getElementById('authForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username')?.value;
+      const password = document.getElementById('password')?.value;
+      const email = document.getElementById('email')?.value;
+
+      const endpoint = isLogin ? '/login' : '/signup';
+      const body = isLogin 
+        ? JSON.stringify({ username, password }) 
+        : JSON.stringify({ username, email, password });
+
+      fetch(`http://localhost:3000${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: body
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          localStorage.setItem('userToken', data.token);
+          window.location.href = 'dashboard.html'; // Redirect to the dashboard
+        } else {
+          alert(data.message || 'An error occurred');
+        }
+      })
+      .catch(err => console.error('Error:', err));
+    });
+  </script>
+</body>
+</html>

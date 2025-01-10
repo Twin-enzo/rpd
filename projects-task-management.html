@@ -1,0 +1,13 @@
+projects-task-management.html
+<div id="notificationContainer"></div>
+
+<script>
+  const socket = io(); // Connect to server
+
+  // Listen for task assignment updates
+  socket.on('taskAssigned', (taskData) => {
+    const notification = document.createElement('div');
+    notification.textContent = `New Task Assigned: ${taskData.title}`;
+    document.getElementById('notificationContainer').appendChild(notification);
+  });
+</script>

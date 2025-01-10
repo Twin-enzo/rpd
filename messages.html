@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages - Rapide LC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #2f2f2f; /* Dark gray background */
+      color: #fff; /* White text */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: flex-start;
+      align-items: stretch;
+      height: 100vh;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      background-color: #333;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar h1 {
+      color: #f1c40f; /* Yellow text for the title */
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+    }
+
+    .nav-item {
+      display: block;
+      padding: 10px;
+      margin: 10px 0;
+      color: #f1c40f; /* Yellow color for menu items */
+      text-decoration: none;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-item:hover {
+      background-color: #f39c12; /* Slight orange shade on hover */
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 270px;
+      padding: 30px;
+      text-align: center;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    h2 {
+      color: #f1c40f;
+    }
+
+    /* Message Section */
+    .message-box {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .chat-input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #444;
+      border-radius: 5px;
+      color: white;
+      border: 1px solid #555;
+    }
+
+    .upload-btn {
+      background-color: #f1c40f;
+      color: #000;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+
+    /* Loader */
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #f1c40f;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 2s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Staff tools */
+    .staff-tools {
+      display: none;
+    }
+
+    .role-staff .staff-tools {
+      display: block;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .main-content {
+        margin-left: 20px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body class="role-client"> <!-- Default role is client -->
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h1>Rapide Electric</h1>
+    <a href="index.html" class="nav-item">Home</a>
+    <a href="projects.html" class="nav-item">Projects</a>
+    <a href="messages.html" class="nav-item">Messages</a>
+    <a href="uploads.html" class="nav-item">Uploads</a>
+    <a href="work-hours.html" class="nav-item">Track Work Hours</a>
+    <a href="ai-chat.html" class="nav-item">AI Chat</a>
+
+    <!-- Admin/Staff tools (only visible for staff) -->
+    <a href="admin-dashboard.html" class="nav-item staff-tools">Admin Dashboard</a>
+    <a href="manage-projects.html" class="nav-item staff-tools">Manage Projects</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h2>Messages</h2>
+
+    <!-- Chat Box -->
+    <div class="message-box">
+      <div id="messagesContainer"></div>
+      <textarea id="messageInput" class="chat-input" placeholder="Type your message here..." rows="4"></textarea>
+      <button class="upload-btn">Send Message</button>
+      <div id="loader" class="loader" style="display:none;"></div>
+    </div>
+
+    <!-- Staff Tools Section (Visible only for staff) -->
+    <div class="staff-tools">
+      <h3>Admin/Staff Tools</h3>
+      <p>This section is only available for staff members to manage projects and view work hours.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelector('.upload-btn').addEventListener('click', function() {
+      let input = document.getElementById('messageInput').value;
+      if (input.trim() === "") {
+        alert("Please enter a message!");
+        return;
+      }
+      // Show loader while sending
+      document.getElementById('loader').style.display = "block";
+
+      setTimeout(() => {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.textContent = input;
+        document.getElementById('messagesContainer').appendChild(messageElement);
+        document.getElementById('loader').style.display = "none";
+        document.getElementById('messageInput').value = ""; // Clear input field
+      }, 1500); // Simulate sending delay
+    });
+
+    // Simulate role check
+    var userRole = 'staff'; // Change this to 'client' to simulate the client view
+
+    if (userRole === 'staff') {
+      document.body.classList.remove('role-client');
+      document.body.classList.add('role-staff');
+    } else {
+      document.body.classList.remove('role-staff');
+      document.body.classList.add('role-client');
+    }
+  </script>
+
+</body>
+</html>

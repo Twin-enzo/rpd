@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Rapide Electric</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #2f2f2f;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: flex-start;
+      align-items: stretch;
+      height: 100vh;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      background-color: #333;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar h1 {
+      color: #f1c40f;
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+    }
+
+    .nav-item {
+      display: block;
+      padding: 10px;
+      margin: 10px 0;
+      color: #f1c40f;
+      text-decoration: none;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-item:hover {
+      background-color: #f39c12;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 270px;
+      padding: 30px;
+      text-align: center;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .notification-item {
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #555;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    /* Notification Section */
+    #notificationContainer {
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h1>Rapide Electric</h1>
+    <a href="admin-dashboard.html" class="nav-item">Home</a>
+    <a href="manage-employees.html" class="nav-item">Manage Employees</a>
+    <a href="projects.html" class="nav-item">Manage Projects</a>
+    <a href="track-locations.html" class="nav-item">Track Locations</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h2>Admin Dashboard</h2>
+    
+    <!-- Notifications Section -->
+    <div id="admin-notifications" class="admin-notifications">
+      <h3>Admin Notifications</h3>
+      <div id="notificationContainer"></div>
+    </div>
+  </div>
+
+  <!-- Socket.io for Real-time notifications -->
+  <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+  <script>
+    const socket = io(); // Connect to the server
+
+    // Listen for task assignment updates
+    socket.on('taskAssigned', (taskData) => {
+      const notification = document.createElement('div');
+      notification.classList.add('notification-item');
+      notification.textContent = `New Task Assigned: ${taskData.title}`;
+      document.getElementById('notificationContainer').appendChild(notification);
+    });
+  </script>
+</body>
+</html>

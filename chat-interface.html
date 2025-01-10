@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="chat-container">
+        <header class="chat-header">
+            <img src="logo.png" alt="Logo" class="chat-logo">
+            <h1>The Stoic Sovereign Chat</h1>
+        </header>
+        
+        <div id="chat-box">
+            <div id="messages-container">
+                <!-- Messages will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <footer class="chat-footer">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button id="emoji-btn">😊</button>
+            <input type="file" id="file-upload" style="display: none;">
+            <button id="file-btn">📎</button>
+            <button id="send-btn">Send</button>
+        </footer>
+    </div>
+
+    <script type="module" src="chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Dashboard - Rapide Electric</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #2f2f2f;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: flex-start;
+      align-items: stretch;
+      height: 100vh;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      background-color: #333;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar h1 {
+      color: #f1c40f;
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+    }
+
+    .nav-item {
+      display: block;
+      padding: 10px;
+      margin: 10px 0;
+      color: #f1c40f;
+      text-decoration: none;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-item:hover {
+      background-color: #f39c12;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 270px;
+      padding: 30px;
+      text-align: center;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    h2 {
+      color: #f1c40f;
+    }
+
+    /* Client Notifications */
+    .client-notifications {
+      margin-top: 50px;
+      padding: 20px;
+      background-color: #444;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .client-notifications h3 {
+      color: #f1c40f;
+    }
+
+    .notification-item {
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #555;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    /* Search Bar Styling */
+    .search-bar {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #444;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search-bar input {
+      padding: 8px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      width: 80%;
+      background-color: #333;
+      color: white;
+    }
+
+    .search-bar button {
+      padding: 8px 15px;
+      background-color: #f39c12;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Client Details Section */
+    .client-details {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #444;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .client-details h3 {
+      color: #f1c40f;
+      margin-bottom: 10px;
+    }
+
+    .client-details p {
+      color: #ddd;
+      font-size: 1.1rem;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h1>Rapide Electric</h1>
+    <a href="client-dashboard.html" class="nav-item">Home</a>
+    <a href="projects.html" class="nav-item">Projects</a>
+    <a href="messages.html" class="nav-item">Messages</a>
+    <a href="contact.html" class="nav-item">Contact</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h2>Welcome to Your Client Dashboard</h2>
+
+    <!-- Client Notifications -->
+    <div class="client-notifications">
+      <h3>Recent Notifications</h3>
+      <div class="notification-item" id="notification1">Your project update is scheduled for review on 01/10/2025.</div>
+      <div class="notification-item" id="notification2">Your latest payment has been successfully processed.</div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search notifications..." onkeyup="searchNotifications()">
+      <button onclick="clearSearch()">Clear Search</button>
+    </div>
+
+    <!-- Client Details Section -->
+    <div class="client-details">
+      <h3>Client Details</h3>
+      <p><strong>Client Name:</strong> John Doe</p>
+      <p><strong>Account ID:</strong> 123456</p>
+      <p><strong>Email:</strong> johndoe@example.com</p>
+      <p><strong>Phone:</strong> (555) 123-4567</p>
+      <p><strong>Status:</strong> Active</p>
+    </div>
+
+  </div>
+
+  <script>
+    // Notifications data
+    let notifications = [
+      { id: 1, message: "Your project update is scheduled for review on 01/10/2025." },
+      { id: 2, message: "Your latest payment has been successfully processed." },
+    ];
+
+    // Search notifications
+    function searchNotifications() {
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      const notificationsList = document.querySelectorAll('.notification-item');
+      notificationsList.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(searchQuery)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Clear the search input and reset notifications
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      searchNotifications();
+    }
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="chat.css">
+  <title>Chat Interface</title>
+</head>
+<body>
+  <div class="chat-container">
+    <header class="chat-header">
+      <img src="logo.png" alt="Logo" class="chat-logo">
+      <h1>Chat Room</h1>
+    </header>
+    <main class="chat-main">
+      <div id="messages" class="chat-messages"></div>
+    </main>
+    <footer class="chat-footer">
+      <input type="text" id="messageInput" placeholder="Type your message..." />
+      <button id="sendButton">Send</button>
+    </footer>
+  </div>
+  <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+  <script src="chat.js"></script>
+</body>
+</html>

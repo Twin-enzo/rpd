@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Dashboard - Rapide Electric</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #2f2f2f;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: flex-start;
+      align-items: stretch;
+      height: 100vh;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      background-color: #333;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar h1 {
+      color: #f1c40f;
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+    }
+
+    .nav-item {
+      display: block;
+      padding: 10px;
+      margin: 10px 0;
+      color: #f1c40f;
+      text-decoration: none;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-item:hover {
+      background-color: #f39c12;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 270px;
+      padding: 30px;
+      text-align: center;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    h2 {
+      color: #f1c40f;
+    }
+
+    /* Clock In/Out Button */
+    .clock-in-out {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      padding: 15px;
+      background-color: #444;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .clock-btn {
+      background-color: #f39c12; /* Yellow color */
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .clock-btn.clocked-in {
+      background-color: #e74c3c; /* Red color when clocked in */
+    }
+
+    /* Admin Notifications */
+    .admin-notifications {
+      margin-top: 50px;
+      padding: 20px;
+      background-color: #444;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .admin-notifications h3 {
+      color: #f1c40f;
+    }
+
+    .notification-item {
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #555;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    /* Search Bar Styling */
+    .search-bar {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #444;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search-bar input {
+      padding: 8px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      width: 80%;
+      background-color: #333;
+      color: white;
+    }
+
+    .search-bar button {
+      padding: 8px 15px;
+      background-color: #f39c12;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h1>Rapide Electric</h1>
+    <a href="staff-dashboard.html" class="nav-item">Home</a>
+    <a href="projects.html" class="nav-item">Projects</a>
+    <a href="messages.html" class="nav-item">Messages</a>
+    <a href="ai-chat.html" class="nav-item">Rapi AI</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h2>Welcome to Your Dashboard</h2>
+
+    <!-- Clock In/Out Section -->
+    <div class="clock-in-out">
+      <button id="clockBtn" class="clock-btn" onclick="toggleClockInOut()">Clock In</button>
+    </div>
+
+    <!-- Admin Notifications Section -->
+    <div class="admin-notifications">
+      <h3>Admin Notifications</h3>
+      <div class="notification-item" id="notification1">Staff member forgot to clock out at 5:00 PM.</div>
+      <div class="notification-item" id="notification2">Urgent task for Staff #5: Electrical Inspection Required</div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search notifications..." onkeyup="searchNotifications()">
+      <button onclick="clearSearch()">Clear Search</button>
+    </div>
+
+  </div>
+
+  <script>
+    let isClockedIn = false;
+    let clockInTime = null;
+    let notifications = [
+      { id: 1, message: "Staff member forgot to clock out at 5:00 PM." },
+      { id: 2, message: "Urgent task for Staff #5: Electrical Inspection Required" },
+    ];
+
+    // WebSocket setup for live messaging/notifications
+    const socket = new WebSocket('ws://yourserveraddress.com'); // Replace with your WebSocket server URL
+
+    socket.onopen = function() {
+      console.log("Connected to WebSocket server");
+    };
+
+    socket.onmessage = function(event) {
+      const newNotification = JSON.parse(event.data);
+      addNotification(newNotification);
+    };
+
+    // Add notification to the DOM
+    function addNotification(notification) {
+      const notificationContainer = document.querySelector('.admin-notifications');
+      const notificationElement = document.createElement('div');
+      notificationElement.classList.add('notification-item');
+      notificationElement.textContent = notification.message;
+      notificationContainer.appendChild(notificationElement);
+    }
+
+    // Toggle the clock in/out button state
+    function toggleClockInOut() {
+      if (!isClockedIn) {
+        // Clock In
+        isClockedIn = true;
+        clockInTime = new Date();
+        document.getElementById('clockBtn').textContent = 'Clock Out';
+        document.getElementById('clockBtn').classList.add('clocked-in');
+        alert('You have clocked in!');
+        sendClockInData();
+      } else {
+        // Clock Out
+        isClockedIn = false;
+        document.getElementById('clockBtn').textContent = 'Clock In';
+        document.getElementById('clockBtn').classList.remove('clocked-in');
+        alert('You have clocked out!');
+        submitEndOfDayReport();
+        sendClockOutData();
+      }
+    }
+
+    function sendClockInData() {
+      const clockInData = {
+        staffId: '12345', 
+        clockInTime: clockInTime,
+        location: { latitude: 40.7128, longitude: -74.0060 },  // Placeholder, actual geolocation can be retrieved
+      };
+      fetch('/api/clock-in', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(clockInData),
+      }).then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+    }
+
+    function sendClockOutData() {
+      const clockOutData = {
+        staffId: '12345',
+        clockOutTime: new Date(),
+        totalWorkHours: calculateTotalHours(clockInTime, new Date()),
+      };
+      fetch('/api/clock-out', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(clockOutData),
+      }).then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+    }
+
+    function calculateTotalHours(clockInTime, clockOutTime) {
+      const diff = clockOutTime - clockInTime;
+      return diff / (1000 * 60 * 60);
+    }
+
+    function searchNotifications() {
+      const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      const notificationsList = document.querySelectorAll('.notification-item');
+      notificationsList.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(searchQuery)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      searchNotifications();
+    }
+  </script>
+
+</body>
+</html>

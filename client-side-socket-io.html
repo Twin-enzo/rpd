@@ -1,0 +1,17 @@
+client-side-socket-io.html
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io('http://localhost:5000');
+  
+  socket.on('notification', (message) => {
+    alert(message);  // Notify admin in real-time
+  });
+</script>
+app.get('/work-hours/:staffId', authenticateToken, (req, res) => {
+    // Fetch and return work hours for the given staffId
+    res.json({ staffId: req.params.staffId, hoursWorked: 8 });
+  });
+  app.get('/employee-status/:staffId', authenticateToken, (req, res) => {
+    // Check if the staff member is clocked in or out
+    res.json({ staffId: req.params.staffId, status: 'clocked-in' });
+  });
